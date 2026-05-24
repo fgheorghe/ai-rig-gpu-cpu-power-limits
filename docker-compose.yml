@@ -1,7 +1,7 @@
 name: ${COMPOSE_PROJECT_NAME:-gpu-cpu-power-limits}
 
 services:
-  gpu-fan-controller:
+  gpu-cpu-power-limits:
     build: .
     container_name: gpu-cpu-power-limits
     restart: unless-stopped
