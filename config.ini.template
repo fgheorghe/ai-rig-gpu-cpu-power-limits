@@ -1,0 +1,12 @@
+; nvidia-smi -L to list GPU UUIDs.
+; Experiment and adjust.
+
+;[gpu:0]
+;uuid=GPU-9bea9fe0-8d74-f896-fab9-b7eff944607f
+;max_wattage=280
+;max_freq=1800
+
+;[gpu:1]
+;uuid=GPU-b637a35e-f36d-8f0a-ae09-b6935db93389
+;max_wattage=200
+;max_freq=1380

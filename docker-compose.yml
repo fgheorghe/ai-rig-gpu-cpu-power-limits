@@ -1,0 +1,14 @@
+name: ${COMPOSE_PROJECT_NAME:-gpu-cpu-power-limits}
+
+services:
+  gpu-fan-controller:
+    build: .
+    container_name: gpu-cpu-power-limits
+    restart: unless-stopped
+    runtime: nvidia
+    env_file: .env
+    environment:
+      - GPU_CONFIG_PATH=/etc/gpu-config/config.ini
+    volumes:
+      - ./config.ini:/etc/gpu-config/config.ini:ro
+    privileged: true
