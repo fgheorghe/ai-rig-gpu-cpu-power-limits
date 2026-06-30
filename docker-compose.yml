@@ -5,7 +5,6 @@ services:
     build: .
     container_name: gpu-cpu-power-limits
     restart: unless-stopped
-    runtime: nvidia
     env_file: .env
     environment:
       - GPU_CONFIG_PATH=/etc/gpu-config/config.ini

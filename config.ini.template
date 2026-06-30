@@ -1,12 +1,55 @@
-; nvidia-smi -L to list GPU UUIDs.
-; Experiment and adjust.
+; Get PCI slots with: lspci -D | grep VGA
+; Power cap in watts
+;
+; Overdrive settings (sclk_offset, mclk, vddgfx_offset) all require:
+;   amdgpu.ppfeaturemask=0xffffffff kernel param
+;   Sets power_dpm_force_performance_level to manual when any OD value is active.
+;
+;   The setting above will show the following when running sudo dmesg | grep -i overdrive:
+;       Overdrive is enabled, please disable it before reporting any bugs unrelated to overdrive
+;   To enable: sudo grubby --update-kernel=ALL --args="amdgpu.ppfeaturemask=0xffffffff" && sudo reboot
+;   If successfully enabled booting up the container should show: overdrive enabled (ppfeaturemask=0xffffffff)
+;   To confirm at a host level issue:
+;      printf 'ppfeaturemask: 0x%x\n' "$(cat /sys/module/amdgpu/parameters/ppfeaturemask)"
+;      ls /sys/class/drm/card*/device/pp_od_clk_voltage 2>&1
+;      sudo dmesg | grep -i overdrive
+;
+; Available settings:
+;   max_wattage    - power cap in watts (no kernel param needed)
+;   sclk_offset    - GPU clock offset in MHz (e.g. -200 to underclock, +100 to boost)
+;   mclk           - memory clock in MHz (state 1, e.g. 1100 to downclock from default 1259)
+;   vddgfx_offset  - GPU voltage offset in mV (e.g. -100, negative only, reduces power draw). May cause instability.
+;
+; NOTE: To reset any to original values simply comment out the values but leave the pci slot id in.
+; NOTE: To determine the lowest supported wattage issue this command on the host:
+;          cat /sys/class/drm/card0/device/hwmon/hwmon*/power1_cap_min
+;          Divide the output by 1000000. If you mix GPUs then issue the command for each different brand / model.
+;       For clock offsets and ranges: cat /sys/class/drm/card0/device/pp_od_clk_voltage
 
-;[gpu:0]
-;uuid=GPU-9bea9fe0-8d74-f896-fab9-b7eff944607f
-;max_wattage=280
-;max_freq=1800
+[gpu:0]
+pci_slot=0000:03:00.0
+max_wattage=210
+;sclk_offset=-200
+;mclk=1100
+;vddgfx_offset=-100
 
-;[gpu:1]
-;uuid=GPU-b637a35e-f36d-8f0a-ae09-b6935db93389
-;max_wattage=200
-;max_freq=1380
+[gpu:1]
+pci_slot=0000:2d:00.0
+max_wattage=210
+;sclk_offset=-200
+;mclk=1100
+;vddgfx_offset=-100
+
+[gpu:2]
+pci_slot=0000:43:00.0
+max_wattage=210
+;sclk_offset=-200
+;mclk=1100
+;vddgfx_offset=-100
+
+[gpu:3]
+pci_slot=0000:63:00.0
+max_wattage=210
+;sclk_offset=-200
+;mclk=1100
+;vddgfx_offset=-100
